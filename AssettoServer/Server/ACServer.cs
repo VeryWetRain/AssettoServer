@@ -62,7 +62,7 @@ public class ACServer : CriticalBackgroundService
         AiSpline? aiSpline = null) : base(applicationLifetime)
     {
         Log.Information("Starting server");
-            
+
         _configuration = configuration;
         _sessionManager = sessionManager;
         _entryCarManager = entryCarManager;
@@ -88,7 +88,7 @@ public class ACServer : CriticalBackgroundService
                 throw new ConfigurationException(
                     "Client messages need a minimum required CSP version of 0.1.77 (1937)");
             }
-            
+
             cspFeatureManager.Add(new CSPFeature { Name = "CLIENT_MESSAGES", Mandatory = true });
             CSPClientMessageOutgoing.ChatEncoded = false;
         }
@@ -123,7 +123,7 @@ public class ACServer : CriticalBackgroundService
 
         var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
         var tasks = new List<Task>();
-        
+
         foreach (var service in _autostartServices)
         {
             tasks.Add(service.StopAsync(cts.Token));
@@ -139,7 +139,7 @@ public class ACServer : CriticalBackgroundService
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         Log.Information("Starting HTTP server on port {HttpPort}", _configuration.Server.HttpPort);
-        
+
         _entryCarManager.Initialize();
         _checksumManager.Initialize();
         await _trackParamsProvider.InitializeAsync();
@@ -209,6 +209,9 @@ public class ACServer : CriticalBackgroundService
                         {
                             fromCar.LastPingTime = _sessionManager.ServerTimeMilliseconds;
                             fromClient.SendPacketUdp(new PingUpdate((uint)fromCar.LastPingTime, fromCar.Ping));
+                            // Send a fake packet as a 'keep-alive' packet. This is for the few users who seem to have weird routers,
+                            // the TCP connection much earlier than expected.
+                            fromClient.SendPacket(new PingUpdate((uint)fromCar.LastPingTime, fromCar.Ping)); 
 
                             if (_sessionManager.ServerTimeMilliseconds - fromCar.LastPongTime > 15000)
                             {
@@ -225,7 +228,7 @@ public class ACServer : CriticalBackgroundService
                             {
                                 var toCar = _entryCarManager.EntryCars[j];
                                 var toClient = toCar.Client;
-                                if (toCar == fromCar 
+                                if (toCar == fromCar
                                     || toClient == null || !toClient.HasSentFirstUpdate || toClient.UdpEndpoint == null
                                     || !fromCar.GetPositionUpdateForCar(toCar, out var update)) continue;
 
@@ -244,7 +247,7 @@ public class ACServer : CriticalBackgroundService
                     foreach (var (toCar, updates) in positionUpdates)
                     {
                         if (updates.Count == 0) continue;
-                            
+
                         var toClient = toCar.Client;
                         if (toClient != null)
                         {
@@ -264,7 +267,7 @@ public class ACServer : CriticalBackgroundService
                                 }
                             }
                         }
-                            
+
                         updates.Clear();
                     }
                 }
