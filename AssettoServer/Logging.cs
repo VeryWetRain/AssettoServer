@@ -51,7 +51,7 @@ internal static class Logging
                     a.Console();
                 }
             })
-            .WriteTo.File($"logs/{logPrefix}-.txt", rollingInterval: RollingInterval.Day);
+            .WriteTo.File($"logs/{logPrefix}-.txt", rollingInterval: RollingInterval.Day, retainedFileCountLimit: null);
 
         if (useVerboseLogging)
             loggerConfiguration.MinimumLevel.Verbose();
