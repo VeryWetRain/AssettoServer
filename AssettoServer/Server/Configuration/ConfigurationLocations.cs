@@ -48,4 +48,11 @@ public class ConfigurationLocations
             ? Path.Join("content", "tracks", track, "data", "drs_zones.ini")
             : Path.Join("content","tracks", track, trackLayout, "data","drs_zones.ini");
     }
+    
+    public string SectionsPath(string track, string trackLayout)
+    {
+        return string.IsNullOrEmpty(trackLayout)
+            ? Path.Join("content", "tracks", track, "data", "sections.ini")
+            : Path.Join("content","tracks", track, trackLayout, "data","sections.ini");
+    }
 }

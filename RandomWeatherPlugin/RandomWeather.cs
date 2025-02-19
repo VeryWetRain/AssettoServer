@@ -143,10 +143,9 @@ public class RandomWeather : CriticalBackgroundService, IAssettoServerAutostart
                 {
                     TransitionDuration = transitionDuration,
                     TemperatureAmbient = last.TemperatureAmbient,
-                    TemperatureRoad = (float)WeatherUtils.GetRoadTemperature(_weatherManager.CurrentDateTime.TimeOfDay.TickOfDay / 10_000_000.0, last.TemperatureAmbient,
-                        nextWeatherType.TemperatureCoefficient),
+                    TemperatureRoad = last.TemperatureRoad, // make weather change cosmetic only
                     Pressure = last.Pressure,
-                    Humidity = nextWeatherType.Humidity,
+                    Humidity = last.Humidity,
                     WindSpeed = last.WindSpeed,
                     WindDirection = last.WindDirection,
                     RainIntensity = last.RainIntensity,

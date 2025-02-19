@@ -36,7 +36,8 @@ public partial class ACServerConfiguration
     [YamlIgnore] public bool GeneratePluginConfigs { get; }
     [YamlIgnore] public int RandomSeed { get; } = Random.Shared.Next();
     [YamlIgnore] public string? Preset { get; }
-    [YamlIgnore] public DrsZones DrsZones { get; }    
+    [YamlIgnore] public DrsZones DrsZones { get; } 
+    [YamlIgnore] public Sections Sections { get; }
     [YamlIgnore] public CarSetups Setups { get; }
     
     /*
@@ -100,6 +101,7 @@ public partial class ACServerConfiguration
 
         FullTrackName = string.IsNullOrEmpty(Server.TrackConfig) ? Server.Track : $"{Server.Track}-{Server.TrackConfig}";
         DrsZones = LoadDrsZones(locations.DrsZonePath(CSPTrackOptions.Track, Server.TrackConfig), Extra.EnableGlobalDrs);
+        Sections = LoadSections(locations.SectionsPath(CSPTrackOptions.Track, Server.TrackConfig));
         
         ApplyConfigurationFixes();
 
@@ -180,6 +182,18 @@ public partial class ACServerConfiguration
         try
         {
             return File.Exists(path) ? DrsZones.FromFile(path) : new DrsZones() ;
+        }
+        catch (Exception ex)
+        {
+            throw new ConfigurationParsingException(path, ex);
+        }
+    }
+
+    private static Sections LoadSections(string path)
+    {
+        try
+        {
+            return File.Exists(path) ? Sections.FromFile(path) : new Sections() ;
         }
         catch (Exception ex)
         {

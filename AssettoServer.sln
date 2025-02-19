@@ -41,8 +41,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReplayPlugin", "ReplayPlugi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Progression", "ProgressionPlugin\Progression.csproj", "{00A081CB-B176-48BA-869B-FC234012F580}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TcpAlivePlugin", "TcpAlivePlugin\TcpAlivePlugin.csproj", "{5BE28F21-AF73-467C-97F9-1C9738026B8D}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -125,10 +123,6 @@ Global
 		{00A081CB-B176-48BA-869B-FC234012F580}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{00A081CB-B176-48BA-869B-FC234012F580}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{00A081CB-B176-48BA-869B-FC234012F580}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5BE28F21-AF73-467C-97F9-1C9738026B8D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5BE28F21-AF73-467C-97F9-1C9738026B8D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5BE28F21-AF73-467C-97F9-1C9738026B8D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5BE28F21-AF73-467C-97F9-1C9738026B8D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
