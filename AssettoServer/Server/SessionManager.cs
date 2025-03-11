@@ -132,11 +132,14 @@ public class SessionManager : CriticalBackgroundService
 
         var entryCarResult = CurrentSession.Results?[client.SessionId] ?? throw new InvalidOperationException("Current session does not have results set");
 
+        /* No need to reject overtime'd laps on this server.
+         Otherwise, laps completed during overtime will get reject after first lap.
         if (entryCarResult.HasCompletedLastLap)
         {
             Log.Debug("Lap rejected by {ClientName}, already finished", client.Name);
             return false;
         }
+        */
 
         if (CurrentSession.Configuration.Type == SessionType.Race
             && entryCarResult.NumLaps >= CurrentSession.Configuration.Laps
