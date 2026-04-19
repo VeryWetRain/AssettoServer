@@ -19,7 +19,7 @@ namespace AssettoServer.Server;
 public class EntryCarManager
 {
     public EntryCar[] EntryCars { get; private set; } = [];
-    internal ConcurrentDictionary<int, EntryCar> ConnectedCars { get; } = new();
+    public ConcurrentDictionary<int, EntryCar> ConnectedCars { get; } = new();
 
     private readonly ACServerConfiguration _configuration;
     private readonly IBlacklistService _blacklist;
@@ -88,7 +88,7 @@ public class EntryCarManager
         {
             if (broadcastReason != null)
             {
-                BroadcastPacket(new ChatMessage { SessionId = 255, Message = broadcastReason });
+                BroadcastChat(broadcastReason);
             }
 
             if (clientReason != null)
@@ -157,6 +157,9 @@ public class EntryCarManager
             }
         }
     }
+
+    public void BroadcastChat(string message, byte senderId = 255) =>
+        BroadcastPacket(new ChatMessage { SessionId = senderId, Message = message });
         
     public void BroadcastPacketUdp<TPacket>(in TPacket packet, ACTcpClient? sender = null, float? range = null, bool skipSender = true) where TPacket : IOutgoingNetworkPacket
     {
@@ -203,9 +206,9 @@ public class EntryCarManager
             }
 
             var isAdmin = await _adminService.IsAdminAsync(handshakeRequest.Guid);
-            foreach (var entryCar in candidates)
+            foreach (var entryCar in candidates.OrderByDescending(x => x.AllowedGuids.Count))
             {
-                if (entryCar.Client == null && (isAdmin || _openSlotFilterChain.Value.IsSlotOpen(entryCar, handshakeRequest.Guid)))
+                if (entryCar.Client == null && (isAdmin || await _openSlotFilterChain.Value.IsSlotOpen(entryCar, handshakeRequest.Guid)))
                 {
                     entryCar.Reset();
                     entryCar.Client = client;
