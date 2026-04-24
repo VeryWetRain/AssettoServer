@@ -31,4 +31,5 @@ jobs:
         run: |
           mkdir -p /opt/ops/builds/ac-server
           rm -rf /opt/ops/builds/ac-server/*
-          cp -r AssettoServer/bin/Release/net9.0/linux-x64/publish/. /opt/ops/builds/ac-server/
+          pwd
+          cp -r AssettoServer/AssettoServer/out-linux-x64. /opt/ops/builds/ac-server/
