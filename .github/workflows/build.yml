@@ -1,0 +1,29 @@
+name: Build AC Server
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "9.0.x"
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Build & publish
+        run: |
+          dotnet publish \
+            -c Release \
+            -r linux-x64 \
+            --self-contained true \
+            -o /opt/ops/builds/ac-server
