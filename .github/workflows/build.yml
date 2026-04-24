@@ -25,4 +25,10 @@ jobs:
           dotnet publish \
             -c Release \
             -r linux-x64 \
-            -o /opt/ops/builds/ac-server
+            --self-contained true \
+          
+      - name: Copy publish output to build directory
+        run: |
+          mkdir -p /opt/ops/builds/ac-server
+          rm -rf /opt/ops/builds/ac-server/*
+          cp -r AssettoServer/bin/Release/net9.0/linux-x64/publish/. /opt/ops/builds/ac-server/
