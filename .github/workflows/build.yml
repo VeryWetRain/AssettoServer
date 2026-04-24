@@ -32,4 +32,4 @@ jobs:
           mkdir -p /opt/ops/builds/ac-server
           rm -rf /opt/ops/builds/ac-server/*
           pwd
-          cp -r AssettoServer/AssettoServer/out-linux-x64. /opt/ops/builds/ac-server/
+          cp -r out-linux-x64/. /opt/ops/builds/ac-server/
