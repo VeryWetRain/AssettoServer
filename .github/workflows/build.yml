@@ -31,5 +31,4 @@ jobs:
         run: |
           mkdir -p /opt/ops/builds/ac-server
           rm -rf /opt/ops/builds/ac-server/*
-          pwd
           cp -r out-linux-x64/. /opt/ops/builds/ac-server/
