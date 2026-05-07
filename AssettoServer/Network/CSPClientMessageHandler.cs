@@ -6,7 +6,6 @@ using AssettoServer.Server.Configuration;
 using AssettoServer.Shared.Network.Packets;
 using AssettoServer.Shared.Network.Packets.Incoming;
 using AssettoServer.Shared.Network.Packets.Shared;
-using Serilog;
 
 namespace AssettoServer.Network;
 
@@ -148,6 +147,12 @@ public class CSPClientMessageHandler
         {
             if (sessionId.HasValue)
             {
+                // Added this to actually reflect lua documentation
+                // for targeting server with id=255
+                if (sessionId.Value == 255) 
+                {
+                    return;
+                }
                 var client = _entryCarManager.EntryCars[sessionId.Value].Client;
                 if (client != null && (!range.HasValue || sender.EntryCar.IsInRange(client.EntryCar, range.Value)))
                 {
@@ -163,6 +168,10 @@ public class CSPClientMessageHandler
         {
             if (sessionId.HasValue)
             {
+                if (sessionId.Value == 255)
+                {
+                    return;
+                }
                 _entryCarManager.EntryCars[sessionId.Value].Client?.SendPacket(clientMessage);
             }
             else
