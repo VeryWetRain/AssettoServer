@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using AssettoServer.Commands;
 using AssettoServer.Commands.Contexts;
@@ -27,6 +28,7 @@ using AssettoServer.Server.UserGroup;
 using AssettoServer.Server.Weather;
 using AssettoServer.Server.Whitelist;
 using Autofac;
+using Autofac.Core;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -77,7 +79,10 @@ public class Startup
         
         // Do this last so we don't register before a plugin fails to start
         builder.RegisterType<UpnpService>().AsSelf().As<IHostedService>().SingleInstance();
-        builder.RegisterType<KunosLobbyRegistration>().AsSelf().As<IHostedService>().SingleInstance();
+        builder.RegisterType<KunosLobbyRegistration>().AsSelf().As<IHostedService>().SingleInstance()
+            .WithParameter(new ResolvedParameter(
+                (pi, ctx) => pi.ParameterType == typeof(HttpClient),
+                (pi, ctx) => CreateLobbyHttpClient()));
         
         // No hosted services below this line
         
@@ -241,5 +246,28 @@ public class Startup
             
             plugin.Instance.Configure(app, env);
         }
+    }
+    
+    // Inject custom http client for support forward-proxy
+    private static HttpClient CreateLobbyHttpClient()
+    {
+        var proxyUrl = Environment.GetEnvironmentVariable("LOBBY_PROXY");
+        if (string.IsNullOrEmpty(proxyUrl))
+            return new HttpClient();
+
+        var uri = new Uri(proxyUrl);
+        var handler = new HttpClientHandler
+        {
+            Proxy = new WebProxy($"http://{uri.Host}:{uri.Port}"),
+            UseProxy = true,
+        };
+        if (!string.IsNullOrEmpty(uri.UserInfo))
+        {
+            var parts = uri.UserInfo.Split(':', 2);
+            ((WebProxy)handler.Proxy).Credentials = new NetworkCredential(
+                Uri.UnescapeDataString(parts[0]),
+                Uri.UnescapeDataString(parts[1]));
+        }
+        return new HttpClient(handler);
     }
 }
