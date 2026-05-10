@@ -28,7 +28,6 @@ using AssettoServer.Server.UserGroup;
 using AssettoServer.Server.Weather;
 using AssettoServer.Server.Whitelist;
 using Autofac;
-using Autofac.Core;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -79,10 +78,10 @@ public class Startup
         
         // Do this last so we don't register before a plugin fails to start
         builder.RegisterType<UpnpService>().AsSelf().As<IHostedService>().SingleInstance();
-        builder.RegisterType<KunosLobbyRegistration>().AsSelf().As<IHostedService>().SingleInstance()
-            .WithParameter(new ResolvedParameter(
-                (pi, ctx) => pi.ParameterType == typeof(HttpClient),
-                (pi, ctx) => CreateLobbyHttpClient()));
+        builder.RegisterType<KunosLobbyRegistration>().AsSelf().As<IHostedService>().SingleInstance();
+            // .WithParameter(new ResolvedParameter(
+            //     (pi, ctx) => pi.ParameterType == typeof(HttpClient),
+            //     (pi, ctx) => CreateLobbyHttpClient()));
         
         // No hosted services below this line
         
