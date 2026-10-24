@@ -120,10 +120,14 @@ public class Push2PassEventArgs : EventArgs
 public class LapCompletedEventArgs : EventArgs
 {
     public LapCompletedOutgoing Packet { get; }
+
+    /// <summary>Client clock (ms) sent with the lap-completed packet.</summary>
+    public uint ClientTimestamp { get; }
     
-    public LapCompletedEventArgs(LapCompletedOutgoing packet)
+    public LapCompletedEventArgs(LapCompletedOutgoing packet, uint clientTimestamp = 0)
     {
         Packet = packet;
+        ClientTimestamp = clientTimestamp;
     }
 }
 

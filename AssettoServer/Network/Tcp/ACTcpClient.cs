@@ -836,7 +836,7 @@ public class ACTcpClient : IClient
         {
             LapCompletedOutgoing packet = CreateLapCompletedPacket(SessionId, lapPacket.LapTime, lapPacket.Cuts);
             _entryCarManager.BroadcastPacket(packet);
-            LapCompleted?.Invoke(this, new LapCompletedEventArgs(packet));
+            LapCompleted?.Invoke(this, new LapCompletedEventArgs(packet, lapPacket.Timestamp));
         }
     }
 
