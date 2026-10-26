@@ -1,34 +1,64 @@
-name: Build AC Server
+# Builds the fork on every push to rains-server, or by hand. Deploying is a separate, manual step: the Deploy
+# workflow in the Ansible repo (app: assettoserver).
+name: Build AssettoServer
 
 on:
+  push:
+    branches: [rains-server]
   workflow_dispatch:
+
+concurrency:
+  group: build-assettoserver
+  cancel-in-progress: false
+
+env:
+  BUILDS: /opt/ops/builds
+  KEEP: 10
+
+defaults:
+  run:
+    shell: bash
 
 jobs:
   build:
-    name: Build
     runs-on: self-hosted
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # MinVer reads the version from the git tags
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: "9.0.x"
 
-      - name: Restore dependencies
-        run: dotnet restore
+      # The solution: the server plus its bundled plugins, into out-linux-x64/.
+      - name: Publish
+        run: |
+          rm -rf out-linux-x64
+          dotnet publish -c Release -r linux-x64 --self-contained true
 
-      - name: Build & publish
+      # Stored as $BUILDS/<app>/<commit>/ with "latest" pointing at the newest. The newest $KEEP builds are kept.
+      - name: Store the build
+        env:
+          APP: assettoserver
+          SRC: out-linux-x64
         run: |
-          dotnet publish \
-            -c Release \
-            -r linux-x64 \
-            --self-contained true \
-          
-      - name: Copy publish output to build directory
-        run: |
-          mkdir -p /opt/ops/builds/ac-server
-          rm -rf /opt/ops/builds/ac-server/*
-          cp -r out-linux-x64/. /opt/ops/builds/ac-server/
+          set -euo pipefail
+          sha="${GITHUB_SHA::12}"
+          [[ $sha =~ ^[0-9a-f]{12}$ ]] || { echo "Unexpected commit: $GITHUB_SHA" >&2; exit 1; }
+          dir="$BUILDS/$APP"
+          mkdir -p "$dir"
+          rm -rf "$dir/.incoming-$sha"
+          cp -a "$SRC/." "$dir/.incoming-$sha/"
+          rm -rf "${dir:?}/$sha"
+          mv "$dir/.incoming-$sha" "$dir/$sha"
+          touch "$dir/$sha"   # age = when it was stored, for pruning
+          ln -sfn "$sha" "$dir/.latest"
+          mv -T "$dir/.latest" "$dir/latest"
+          current=$(readlink "$dir/latest")
+          find "$dir" -mindepth 1 -maxdepth 1 -type d -regextype posix-extended -regex '.*/[0-9a-f]{12}' -printf '%T@ %f\n' \
+            | sort -rn | tail -n +$((KEEP + 1)) | cut -d' ' -f2 \
+            | while read -r old; do [ "$old" = "$current" ] || rm -rf "${dir:?}/$old"; done
+          echo "Stored $dir/$sha"
