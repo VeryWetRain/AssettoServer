@@ -28,11 +28,6 @@ jobs:
         with:
           fetch-depth: 0   # MinVer reads the version from the git tags
 
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: "9.0.x"
-
       # The solution: the server plus its bundled plugins, into out-linux-x64/.
       - name: Publish
         run: |
