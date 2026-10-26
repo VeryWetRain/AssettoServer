@@ -1,0 +1,30 @@
+﻿<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="AssettoServer" type="DotNetProject" factoryName=".NET Project">
+    <option name="EXE_PATH" value="$PROJECT_DIR$/AssettoServer/bin/Debug/net9.0/AssettoServer.exe" />
+    <option name="PROGRAM_PARAMETERS" value="" />
+    <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/AssettoServer/bin/Debug/net9.0" />
+    <option name="PASS_PARENT_ENVS" value="1" />
+    <envs>
+      <env name="PROGRESSION_ConnectionStrings__Progression" value="Host=ac-db;Port=5432;Database=progression_qa;Username=ac_server_1;Password=Y1kH^UxlqYy5cWr^VH2Xj9!Fs" />
+    </envs>
+    <option name="USE_EXTERNAL_CONSOLE" value="0" />
+    <option name="ENV_FILE_PATHS" value="" />
+    <option name="REDIRECT_INPUT_PATH" value="" />
+    <option name="PTY_MODE" value="Auto" />
+    <option name="USE_MONO" value="0" />
+    <option name="RUNTIME_ARGUMENTS" value="" />
+    <option name="AUTO_ATTACH_CHILDREN" value="0" />
+    <option name="MIXED_MODE_DEBUG" value="0" />
+    <option name="PROJECT_PATH" value="$PROJECT_DIR$/AssettoServer/AssettoServer.csproj" />
+    <option name="PROJECT_EXE_PATH_TRACKING" value="1" />
+    <option name="PROJECT_ARGUMENTS_TRACKING" value="1" />
+    <option name="PROJECT_WORKING_DIRECTORY_TRACKING" value="1" />
+    <option name="PROJECT_KIND" value="DotNetCore" />
+    <option name="PROJECT_TFM" value="net9.0" />
+    <method v="2">
+      <option name="CleanProject" default="false" projectName="Progression" projectPath="$PROJECT_DIR$/ProgressionPlugin/Progression.csproj" />
+      <option name="Build" default="false" projectName="Progression" projectPath="$PROJECT_DIR$/ProgressionPlugin/Progression.csproj" />
+      <option name="Build" />
+    </method>
+  </configuration>
+</component>
