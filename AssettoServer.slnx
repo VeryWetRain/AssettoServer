@@ -1,6 +1,4 @@
 ﻿<Solution>
-  <Project Path="..\..\Progression.Dispatcher\ProgressionDispatcher.csproj" />
-  <Project Path="..\..\Progression.Stats\Progression.Stats.csproj" />
   <Project Path="AssettoServer.Shared\AssettoServer.Shared.csproj" />
   <Project Path="AssettoServer.Tests\AssettoServer.Tests.csproj" />
   <Project Path="AssettoServer\AssettoServer.csproj" />
@@ -11,7 +9,6 @@
   <Project Path="FastTravelPlugin\FastTravelPlugin.csproj" />
   <Project Path="GeoIPPlugin\GeoIPPlugin.csproj" />
   <Project Path="LiveWeatherPlugin\LiveWeatherPlugin.csproj" />
-  <Project Path="ProgressionPlugin\Progression.csproj" />
   <Project Path="RaceChallengePlugin\RaceChallengePlugin.csproj" />
   <Project Path="RandomWeatherPlugin\RandomWeatherPlugin.csproj" />
   <Project Path="ReplayPlugin\ReplayPlugin.csproj">
